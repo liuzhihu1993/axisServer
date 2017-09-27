@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment name="defaultClientConfig"
+	xmlns:java="http://xml.apache.org/axis/wsdd/providers/java"
+	xmlns:handler="http://xml.apache.org/axis/wsdd/providers/handler"
+	xmlns="http://xml.apache.org/axis/wsdd/">
+	<globalConfiguration name="defaultClientConfig">
+		<requestFlow name="RequestFlow1" type="">
+			<handler name="Handler1" type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="session" />
+			</handler>
+			<handler name="Handler2" type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="request" />
+				<parameter name="extension" value=".jwr" />
+			</handler>
+		</requestFlow>
+	</globalConfiguration>
+	<handler name="URLMapper" type="java:org.apache.axis.handlers.http.URLMapper" />
+	<handler name="LocalResponder"
+		type="java:org.apache.axis.transport.local.LocalResponder" />
+	<handler name="Authenticate"
+		type="java:org.apache.axis.handlers.SimpleAuthenticationHandler" />
+	<transport name="http" type="">
+		<requestFlow name="RequestFlow1" type="">
+			<handler name="Handler1" type="URLMapper" />
+			<handler name="Handler2"
+				type="java:org.apache.axis.handlers.http.HTTPAuthHandler" />
+		</requestFlow>
+	</transport>
+	<transport name="local" type="">
+		<responseFlow name="ResponseFlow1" type="">
+			<handler name="Handler1" type="LocalResponder" />
+		</responseFlow>
+	</transport>
+
+	<!-- 每个webservice均需要一个如下配置,name为访问时的请求名 -->
+	<!--返回的是简单类型 -->
+	<service name="helloService" provider="java:RPC" style="rpc"
+		use="encoded">
+		<parameter name="scope" value="Request" />
+		<!-- className为实际访问的服务类 -->
+		<parameter name="className" value="com.webservice.HelloWebservice" />
+		<!-- allowedMethods为实际访问的服务方法 -->
+		<parameter name="allowedMethods" value="doService" />
+	</service>
+
+	<!--返回的是简单类型 -->
+	<service name="testService" provider="java:RPC" style="rpc"
+		use="encoded">
+		<parameter name="scope" value="Request" />
+		<!-- className为实际访问的服务类 -->
+		<parameter name="className" value="com.webservice.TestService" />
+		<!-- allowedMethods为实际访问的服务方法 -->
+		<parameter name="allowedMethods" value="doService" />
+	</service>
+
+	<!-- 返回自定义实体类 -->
+	<service name="getStuService" provider="java:RPC" style="rpc"
+		use="encoded">
+		<parameter name="scope" value="Request" />
+		<!-- className为实际访问的服务类 -->
+		<parameter name="className" value="com.webservice.GetStuService" />
+		<!-- allowedMethods为实际访问的服务方法 -->
+		<parameter name="allowedMethods"
+			value="getStudentById,readOnlyStudent,getStudentList" />
+
+		<beanMapping languageSpecificType="java:com.webservice.Student"
+			qname="ns1:Student" xmlns:ns1="com.webservice" />
+
+		<typeMapping languageSpecificType="java:com.webservice.Student"
+			qname="ns1:Student" xmlns:ns1="com.webservice"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" />
+		<namespace>com.webservice</namespace>
+	</service>
+
+</deployment>

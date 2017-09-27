@@ -1,0 +1,122 @@
+<wsdl:definitions xmlns:apachesoap="http://xml.apache.org/xml-soap"
+	xmlns:impl="com.webservice" xmlns:intf="com.webservice"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="com.webservice">
+	<!-- WSDL created by Apache Axis version: 1.4 Built on Apr 22, 2006 (06:55:48 
+		PDT) -->
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="com.webservice">
+			<import namespace="http://xml.apache.org/xml-soap" />
+			<import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+			<complexType name="Student">
+				<sequence>
+					<element name="stuAge" nillable="true" type="soapenc:string" />
+					<element name="stuId" type="xsd:int" />
+					<element name="stuName" nillable="true" type="soapenc:string" />
+				</sequence>
+			</complexType>
+			<complexType name="ArrayOf_soapenc_string">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="soapenc:string[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="ArrayOf_xsd_anyType">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:anyType[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+		</schema>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://xml.apache.org/xml-soap">
+			<import namespace="com.webservice" />
+			<import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+			<complexType name="Vector">
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="item"
+						type="xsd:anyType" />
+				</sequence>
+			</complexType>
+		</schema>
+	</wsdl:types>
+	<wsdl:message name="getStudentListRequest">
+		<wsdl:part name="obj" type="impl:ArrayOf_soapenc_string" />
+	</wsdl:message>
+	<wsdl:message name="getStudentListResponse">
+		<wsdl:part name="getStudentListReturn" type="impl:ArrayOf_xsd_anyType" />
+	</wsdl:message>
+	<wsdl:message name="getStudentByIdResponse">
+		<wsdl:part name="getStudentByIdReturn" type="impl:Student" />
+	</wsdl:message>
+	<wsdl:message name="readOnlyStudentResponse">
+		<wsdl:part name="readOnlyStudentReturn" type="impl:Student" />
+	</wsdl:message>
+	<wsdl:message name="getStudentByIdRequest">
+		<wsdl:part name="stuId" type="xsd:int" />
+	</wsdl:message>
+	<wsdl:message name="readOnlyStudentRequest">
+		<wsdl:part name="student" type="impl:Student" />
+	</wsdl:message>
+	<wsdl:portType name="GetStuService">
+		<wsdl:operation name="getStudentById" parameterOrder="stuId">
+			<wsdl:input message="impl:getStudentByIdRequest" name="getStudentByIdRequest" />
+			<wsdl:output message="impl:getStudentByIdResponse" name="getStudentByIdResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="readOnlyStudent" parameterOrder="student">
+			<wsdl:input message="impl:readOnlyStudentRequest" name="readOnlyStudentRequest" />
+			<wsdl:output message="impl:readOnlyStudentResponse" name="readOnlyStudentResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="getStudentList" parameterOrder="obj">
+			<wsdl:input message="impl:getStudentListRequest" name="getStudentListRequest" />
+			<wsdl:output message="impl:getStudentListResponse" name="getStudentListResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="getStuServiceSoapBinding" type="impl:GetStuService">
+		<wsdlsoap:binding style="rpc"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="getStudentById">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getStudentByIdRequest">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="com.webservice" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getStudentByIdResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="com.webservice" use="encoded" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="readOnlyStudent">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="readOnlyStudentRequest">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="com.webservice" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="readOnlyStudentResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="com.webservice" use="encoded" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getStudentList">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getStudentListRequest">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="com.webservice" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getStudentListResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="com.webservice" use="encoded" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="GetStuServiceService">
+		<wsdl:port binding="impl:getStuServiceSoapBinding" name="getStuService">
+			<wsdlsoap:address
+				location="http://localhost:8080/axisProject/webservice/getStuService" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
